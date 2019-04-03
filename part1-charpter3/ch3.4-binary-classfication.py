@@ -6,7 +6,7 @@ from keras.datasets import imdb
 from keras import models, layers, optimizers, losses, metrics
 import matplotlib.pyplot as plt
 
-# 将整数序列编码为二进制矩阵
+# 将整数序列编码为二进制矩阵--->向量化便于NN处理
 def vectorize_sequences(sequences, dimension=10000):
     results = np.zeros((len(sequences), dimension))
     for i, sequence in enumerate(sequences):
@@ -33,14 +33,16 @@ if __name__ == '__main__':
     x_test = vectorize_sequences(test_data)
     y_test = np.asarray(test_labels).astype("float32")
 
-    #将训练集拆分成两部分（数据少是需要用交叉验证）
+    #将训练集拆分成两部分（数据少时需要用交叉验证，此处不需要。）
+    #Q:数据多少如何定性判定？？？
+    #验证集的目的是为了便于监督训练过程，合理配置超参等。
     x_val = x_train[: 10000]
     y_val = y_train[: 10000]
     patrial_x_train = x_train[10000 : ]
     patrial_y_train = y_train[10000 : ]
 
     model = build_model()
-    history = model.fit(patrial_x_train, patrial_y_train, epochs=4, batch_size=512, validation_data=(x_val, y_val))
+    history = model.fit(patrial_x_train, patrial_y_train, epochs=20, batch_size=512, validation_data=(x_val, y_val))
 
     history_dict = history.history
     print(history_dict.keys())
@@ -70,7 +72,7 @@ if __name__ == '__main__':
     plt.ylabel('accuracy')
     plt.show()
 
-    # 准确率评估（测试集，验证集上的准确率说明的又是什么?通常我们说的准确率应该是验证集上的才对吧？？）
+    # 准确率评估（在测试集上评估准确率，验证集上监督训练过程便于调参等）
     results = model.evaluate(x_test, y_test)
     print(results)
 
