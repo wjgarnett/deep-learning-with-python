@@ -123,7 +123,7 @@ if __name__ == '__main__':
     #build model
     model = build_model()
 
-    history = model.fit_generator(train_generator, steps_per_epoch=100, epochs=30, validation_data=validation_generator, validation_steps=50)
+    history = model.fit_generator(train_generator, steps_per_epoch=100, epochs=100, validation_data=validation_generator, validation_steps=50)
     model.save("dogs-and-cats-small.h5")
     save_figures(history,[("acc", "val_acc"), ("loss", "val_loss")])
 
